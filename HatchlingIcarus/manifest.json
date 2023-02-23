@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/manifest_schema.json",
+  "filename": "HatchlingIcarus.dll",
+  "author": "coderCleric",
+  "name": "Hatchling Icarus",
+  "uniqueName": "Cleric.HatchlingIcarus",
+  "version": "1.0.0",
+  "owmlVersion": "2.8.0",
+  "dependencies": []
+}

@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "settings": {
+    "Alignment Mode": {
+      "type": "selector",
+      "value": "Body",
+      "options": [
+        "Camera",
+        "Body"
+      ]
+    },
+    "Field Force": 1.0,
+    "Active Alignment": true
+  }
+}

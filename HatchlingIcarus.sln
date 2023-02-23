@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatchlingIcarus", "HatchlingIcarus\HatchlingIcarus.csproj", "{9500D8C4-ACAA-4B0D-8D2D-BA94B02C6227}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9500D8C4-ACAA-4B0D-8D2D-BA94B02C6227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9500D8C4-ACAA-4B0D-8D2D-BA94B02C6227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9500D8C4-ACAA-4B0D-8D2D-BA94B02C6227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9500D8C4-ACAA-4B0D-8D2D-BA94B02C6227}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EBF2F752-71F8-4C4C-A432-756F047A6848}
+	EndGlobalSection
+EndGlobal
