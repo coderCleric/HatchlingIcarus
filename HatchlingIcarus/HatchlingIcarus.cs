@@ -12,6 +12,8 @@ namespace HatchlingIcarus {
         private int mode; //0 is feet, 1 is cam
         public static float force;
         private bool activeAlign;
+        public static HatchlingIcarus instance;
+        public static ScreenPrompt gravNotification = new ScreenPrompt("Gravity Active");
 
         /**
          * Just need to load the patches
@@ -22,6 +24,7 @@ namespace HatchlingIcarus {
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
             ModHelper.Console.WriteLine($"Hatchling Icarus is ready!");
+            instance = this;
         }
 
         /**
@@ -57,6 +60,7 @@ namespace HatchlingIcarus {
                 {
                     gravObject.SetActive(!gravObject.activeSelf);
                     gravObject.GetComponent<DirectionalForceVolume>().SetAttachedBody(Locator.GetSunTransform().GetComponent<OWRigidbody>());
+                    gravNotification.SetVisibility(gravObject.activeSelf);
                     AlignField();
                 }
 
@@ -80,12 +84,15 @@ namespace HatchlingIcarus {
                 mode = 1;
 
             //Force
-            force = config.GetSettingsValue<float>("Field Force") * 10.0f;
+            force = (config.GetSettingsValue<float>("Field Force") * 10.0f) + 2;
             if (gravObject != null)
                 gravObject.GetComponent<DirectionalForceVolume>().SetFieldMagnitude(force);
 
             //Active or not
             activeAlign = config.GetSettingsValue<bool>("Active Alignment");
+
+            //Active or not
+            Patches.disableImpacts = config.GetSettingsValue<bool>("Disable Impact Damage");
         }
     }
 }
