@@ -10,7 +10,7 @@
       ]
     },
     "Field Force": 1.0,
-    "Active Alignment": true,
+    "Active Alignment": false,
     "Disable Impact Damage": false
   }
 }
