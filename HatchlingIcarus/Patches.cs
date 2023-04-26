@@ -12,39 +12,46 @@ namespace HatchlingIcarus
     public static class Patches
     {
         public static bool disableImpacts;
+        public static bool gravOn = false;
+        public static Vector3 gravDirection = Vector3.up;
 
         /**
-         * When the locator is activated, make the gravity field
+         * When toggled on, always tell the player's force detector that it should go a specific way
+         * 
+         * @param __instance The instance of the alignment force detector
+         */
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(AlignmentForceDetector), nameof(AlignmentForceDetector.AccumulateAcceleration))]
+        public static bool OverridePlayerForces(AlignmentForceDetector __instance)
+        {
+            if(gravOn && __instance.CompareTag("PlayerDetector"))
+            {
+                __instance._netAcceleration = gravDirection * HatchlingIcarus.force;
+                if (HatchlingIcarus.force != 0)
+                    __instance._aligmentAccel = gravDirection;
+                else
+                    __instance._aligmentAccel = Vector3.zero;
+                return false;
+            }
+            return true;
+        }
+
+        /**
+         * When the locator comes on, do some setup stuff
          */
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Locator), nameof(Locator.LocateSceneObjects))]
-        public static void MakeGravField()
+        public static void ResetOnLoad()
         {
-            //Add stuff for the gravity field
-            GameObject gravField = new GameObject();
-            gravField.SetActive(false);
-            gravField.layer = LayerMask.NameToLayer("BasicEffectVolume");
-
-            BoxCollider box = gravField.AddComponent<BoxCollider>();
-            box.isTrigger = true;
-
-            OWCollider OWCol = gravField.AddComponent<OWCollider>();
-            OWCol._lodActivationMask = new DynamicOccupantMask();
-            OWCol._lodActivationMask.ship = false;
-
-            gravField.AddComponent<OWTriggerVolume>();
-
-            DirectionalForceVolume forceVolume = gravField.AddComponent<DirectionalForceVolume>();
-            forceVolume._priority = 99;
-            forceVolume._alignmentPriority = 99;
-            forceVolume._fieldDirection = Vector3.down;
-            forceVolume._fieldMagnitude = HatchlingIcarus.force;
-
-            HatchlingIcarus.gravObject = gravField;
-
-            //Add the prompt
-            Locator.GetPromptManager().AddScreenPrompt(HatchlingIcarus.gravNotification, PromptPosition.BottomCenter);
-            HatchlingIcarus.gravNotification.SetVisibility(false);
+            if (Locator.GetPlayerTransform() != null) //This tells if we're in a valid system or not
+            {
+                //Turn off the personal gravity
+                gravOn = false;
+                
+                //Add the prompt
+                Locator.GetPromptManager().AddScreenPrompt(HatchlingIcarus.gravNotification, PromptPosition.BottomCenter);
+                HatchlingIcarus.gravNotification.SetVisibility(false);
+            }
         }
 
         /**
@@ -62,20 +69,6 @@ namespace HatchlingIcarus
                 return false;
             }
             return true;
-        }
-
-        /**
-         * Prevent the ship from being affected by the personal gravity field
-         * 
-         * @param __instance The calling volume
-         * @param hitObj The object being added
-         */
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(ForceVolume), nameof(ForceVolume.OnEffectVolumeEnter))]
-        public static bool BlockShipFromGrav(ForceVolume __instance, GameObject hitObj)
-        {
-            bool flag = __instance.gameObject == HatchlingIcarus.gravObject && hitObj == Locator.GetShipDetector();
-            return !flag;
         }
     }
 }

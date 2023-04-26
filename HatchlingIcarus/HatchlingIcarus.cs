@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 namespace HatchlingIcarus {
     public class HatchlingIcarus : ModBehaviour
     {
-        public static GameObject gravObject = null;
+        //public static GameObject gravObject = null;
         private int mode; //0 is feet, 1 is cam
         public static float force;
         private bool activeAlign;
@@ -32,43 +32,38 @@ namespace HatchlingIcarus {
          */
         private void AlignField()
         {
-            if(gravObject != null)
-            {
-                //To the body
-                if(mode == 0)
-                    gravObject.transform.rotation = Locator.GetPlayerTransform().rotation;
+            //To the body
+            if(mode == 0)
+                Patches.gravDirection = Locator.GetPlayerTransform().up * -1;
 
-                //To the camera
-                else
-                {
-                    gravObject.transform.rotation = Locator.GetPlayerCamera().transform.rotation;
-                    Vector3 rotationAxis = new Vector3(1, 0, 0);
-                    gravObject.transform.rotation *= Quaternion.AngleAxis(-90, rotationAxis);
-                }
-            }
+            //To the camera
+            else
+                Patches.gravDirection = Locator.GetPlayerCamera().transform.forward;
         }
 
         /**
-         * Just need to check for the player pressing P & move the gravity object
+         * Just need to check for the player pressing K & move the gravity object
          */
         private void Update()
         {
-            if (gravObject != null)
+            if (Locator.GetPlayerTransform() != null)
             {
-                //Enable/disable the field
+                //Enable/disable the grav
                 if (Keyboard.current[Key.K].wasPressedThisFrame)
                 {
-                    gravObject.SetActive(!gravObject.activeSelf);
-                    gravObject.GetComponent<DirectionalForceVolume>().SetAttachedBody(Locator.GetSunTransform().GetComponent<OWRigidbody>());
-                    gravNotification.SetVisibility(gravObject.activeSelf);
-                    AlignField();
+                    Patches.gravOn = !Patches.gravOn;
+
+                    if (Patches.gravOn) //If it's on now, align it
+                        AlignField();
+
+                    //Do the notification
+                    gravNotification.SetVisibility(Patches.gravOn);
                 }
 
-                //Move it to the player
-                Transform playerTransform = Locator.GetPlayerTransform();
-                gravObject.transform.position = playerTransform.position;
                 if (activeAlign)
+                {
                     AlignField();
+                }
             }
         }
 
@@ -84,9 +79,7 @@ namespace HatchlingIcarus {
                 mode = 1;
 
             //Force
-            force = (config.GetSettingsValue<float>("Field Force") * 10.0f) + 2;
-            if (gravObject != null)
-                gravObject.GetComponent<DirectionalForceVolume>().SetFieldMagnitude(force);
+            force = config.GetSettingsValue<float>("Field Force");
 
             //Active or not
             activeAlign = config.GetSettingsValue<bool>("Active Alignment");

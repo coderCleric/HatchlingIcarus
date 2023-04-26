@@ -4,7 +4,7 @@
   "author": "coderCleric",
   "name": "Hatchling Icarus",
   "uniqueName": "Cleric.HatchlingIcarus",
-  "version": "1.0.0",
-  "owmlVersion": "2.8.0",
+  "version": "1.1.0",
+  "owmlVersion": "2.9.0",
   "dependencies": []
 }
